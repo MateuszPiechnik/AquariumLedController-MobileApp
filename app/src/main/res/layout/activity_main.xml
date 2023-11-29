@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/lightGray"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/LedOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All On" />
+
+    <Button
+        android:id="@+id/LedOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="All Off" />
+
+    <ImageButton
+        android:id="@+id/coldWhiteOff"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/coldwhiteoff" />
+
+    <SeekBar
+        android:id="@+id/seekBarCold"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="145dp"
+        android:max="255"
+        android:indeterminate="false"
+        android:progress="0"/>
+
+    <TextView
+        android:id="@+id/seekBarTextCold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/seekBarCold"
+        android:layout_below="@id/seekBarCold"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="130dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <ImageButton
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        android:id="@+id/warmWhiteOff"
+        android:src="@drawable/warmwhiteoff"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="220dp"/>
+
+    <SeekBar
+        android:id="@+id/seekBarWarm"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="245dp"
+        android:max="255"
+        android:indeterminate="false"
+        android:progress="0"/>
+
+    <TextView
+        android:id="@+id/seekBarTextWarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/seekBarWarm"
+        android:layout_below="@id/seekBarWarm"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="130dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="60dp"
+        android:max="255"
+        android:indeterminate="false"
+        android:progress="0"/>
+
+    <TextView
+        android:id="@+id/seekBarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/seekBar1"
+        android:layout_below="@id/seekBar1"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="130dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/timerOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/timeButton"
+        android:text="Timer on"
+        android:layout_marginTop="-30dp"
+        android:layout_marginLeft="30dp"
+        android:visibility="visible"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/timerOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/timeButtonOff"
+        android:text="Timer off"
+        android:layout_marginTop="-30dp"
+        android:layout_marginLeft="250dp"
+        android:visibility="visible"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
+    <Button
+        android:id="@+id/timeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="1dp"
+        android:width="150dp"
+        android:height="50dp"
+        android:text="Select time"
+        android:backgroundTint="@color/lb"
+        android:textSize="16dp"/>
+
+    <Button
+        android:id="@+id/timeButtonOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="215dp"
+        android:width="150dp"
+        android:height="50dp"
+        android:text="Select time"
+        android:backgroundTint="@color/lb"
+        android:textSize="16dp"/>
+
+    <Button
+        android:id="@+id/buttonOpenDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="410dp"
+        android:width="120dp"
+        android:height="50dp"
+        android:text="Settings"
+        android:textSize="16dp"
+        android:backgroundTint="@color/lb"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/Reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="465dp"
+        android:layout_marginLeft="30dp"
+        android:width="20dp"
+        android:height="50dp"
+        android:text="Reset"
+        android:textSize="16dp"
+        android:backgroundTint="@color/lb"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/ResetOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="415dp"
+        android:layout_marginLeft="250dp"
+        android:width="20dp"
+        android:height="50dp"
+        android:text="Reset"
+        android:textSize="16dp"
+        android:backgroundTint="@color/lb"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="350dp"
+        android:src="@drawable/clock" />
+
+    <Button
+        android:id="@+id/colorTemperatureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="540dp"
+        android:width="130dp"
+        android:height="65dp"
+        android:backgroundTint="@color/lb"
+        android:text="color Temperature"
+        android:textSize="12dp"
+        tools:ignore="TextSizeCheck" />
+
+    <SeekBar
+        android:id="@+id/CTSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="520dp"
+        android:layout_marginLeft="140dp"
+        android:minWidth="190dp"
+        android:max="8"
+        android:progress="0"
+        android:visibility="invisible"
+        android:indeterminate="false" />
+
+    <TextView
+        android:id="@+id/CTtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/CTSeekBar"
+        android:layout_below="@id/CTSeekBar"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="1dp"
+        android:width="300dp"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <SeekBar
+        android:id="@+id/CTpercentageSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="580dp"
+        android:layout_marginLeft="140dp"
+        android:minWidth="190dp"
+        android:max="9"
+        android:progress="9"
+        android:visibility="invisible"
+        android:indeterminate="false"/>
+
+    <TextView
+        android:id="@+id/CTpercentagetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/CTpercentageSeekBar"
+        android:layout_below="@id/CTpercentageSeekBar"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="1dp"
+        android:width="300dp"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/daySimButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="650dp"
+        android:height="60dp"
+        android:width="150dp"
+        android:text="Day simulation"
+        android:backgroundTint="@color/lb"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/moon"
+        android:layout_alignRight="@id/daySimButton"
+        android:layout_alignBottom="@id/daySimButton"
+        android:layout_marginRight="160dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sun"
+        android:layout_alignLeft="@id/daySimButton"
+        android:layout_alignBottom="@id/daySimButton"
+        android:layout_marginLeft="160dp"/>
+
+</RelativeLayout>

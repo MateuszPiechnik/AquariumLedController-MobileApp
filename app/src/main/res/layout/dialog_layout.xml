@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <SeekBar
+        android:id="@+id/CTSettingsSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="8"
+        android:progress="0"
+        android:minWidth="290dp"
+        android:layout_marginTop="45dp"/>
+
+    <TextView
+        android:id="@+id/CTSettingsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Color Temperature"
+        android:layout_marginTop="-60dp"
+        android:textStyle="bold"
+        android:textSize="17dp"/>
+
+    <SeekBar
+        android:id="@+id/CTSettingsPercentageSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="8"
+        android:progress="0"
+        android:minWidth="290dp"
+        android:layout_marginTop="105dp"/>
+
+    <TextView
+        android:id="@+id/CTSettingsPercentageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brightness"
+        android:layout_marginTop="-60dp"
+        android:textStyle="bold"
+        android:textSize="17dp"/>
+
+</LinearLayout>
