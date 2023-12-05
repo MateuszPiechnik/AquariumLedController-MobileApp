@@ -1,12 +1,13 @@
 package com.example.wifi;
 
-import android.app.AlertDialog;
+import static com.example.wifi.DialogUtils.colorTempBrightnessSettings;
+import static com.example.wifi.DialogUtils.colorTempSettings;
+
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
@@ -22,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private int sunriseHour, sunriseMinute, sunsetHour, sunsetMinute;
     int colorTemp = 2700;
     int colorTempPerc = 100;
-    int colorTempSettings = 2700;
-    int colorTempBrightnessSettings = 100;
     Button ledOn, ledOff; //buttons to both leds
     Button timeButton, resetButton, timeButtonOff, resetButtonOff;   //timer buttons
     Button colorTemperatureButton;
@@ -55,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
     SeekBar CTsBar, CTPercsBar, sBar, sBarCold, sBarWarm;
     Button daySimButton;
     Button openDialogButton;
-    int progressCTSettings = 0;
-    int progressCTBrightnessSettings = 9;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         openDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                DialogUtils.openDialog(MainActivity.this, esp8266IpAddress, hour, minute);
             }
         });
 
@@ -454,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             handler.postDelayed(this,1000);
         }
     };
+    @SuppressLint("SetTextI18n")
     private void resetColorTemperatureFunctionality(){
         isColorTempOn = false;
         colorTemp = 2700;
@@ -476,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "day_sim_off");
     }
 
+    @SuppressLint("SetTextI18n")
     private void changeLedStatusOn(boolean status){
         if(status){
             NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "led_on");
@@ -505,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void adjustSeekBarsForColorTemperature(int value, int percentage)
     {
         switch (value){
@@ -609,13 +610,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // Konwersja na polski format godzinowy (24-godzinny)
                     SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm:ss a", Locale.ENGLISH);
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("HHmm", Locale.ENGLISH);
 
                     Calendar sunriseDate = Calendar.getInstance();
                     Calendar sunsetDate = Calendar.getInstance();
 
-                    sunriseDate.setTime(inputFormat.parse(sunrise));
-                    sunsetDate.setTime(inputFormat.parse(sunset));
+                    sunriseDate.setTime(Objects.requireNonNull(inputFormat.parse(sunrise)));
+                    sunsetDate.setTime(Objects.requireNonNull(inputFormat.parse(sunset)));
 
                     if(!isSummerTime){
                         sunriseDate.add(Calendar.HOUR,1);
@@ -654,85 +654,5 @@ public class MainActivity extends AppCompatActivity {
 
         queue.add(request);
 
-    }
-
-    private void openDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Settings");
-
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_layout, null);
-        builder.setView(dialogView);
-
-        SeekBar CTSettingsSBar = dialogView.findViewById(R.id.CTSettingsSeekBar);
-        TextView CTSettingsText = dialogView.findViewById(R.id.CTSettingsText);
-        CTSettingsText.setText("Color Temperature: " + colorTempSettings + "K");
-        CTSettingsSBar.setProgress(progressCTSettings);
-
-        SeekBar CTSettingsBrightness = dialogView.findViewById(R.id.CTSettingsPercentageSeekBar);
-        TextView CTSettingsBrightnessText = dialogView.findViewById(R.id.CTSettingsPercentageText);
-        CTSettingsBrightnessText.setText("Brightness: "+ colorTempBrightnessSettings + " %");
-        CTSettingsBrightness.setProgress(progressCTBrightnessSettings);
-
-        CTSettingsSBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress==0){
-                    colorTempSettings = 2700;
-                }
-                else
-                {
-                    colorTempSettings = 2500 + 500*progress;
-                }
-                progressCTSettings = progress;
-                CTSettingsText.setText("Color Temperature: " + colorTempSettings + "K");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                CTSettingsText.setText("Color Temperature: " + colorTempSettings + "K");
-            }
-        });
-
-        CTSettingsBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                progressCTBrightnessSettings = progress;
-                colorTempBrightnessSettings = 10 + progress*10;
-                CTSettingsBrightnessText.setText("Brightness: "+ colorTempBrightnessSettings + " %");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                CTSettingsBrightnessText.setText("Brightness: "+ colorTempBrightnessSettings + " %");
-            }
-        });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                TimerUtils.SendTimeSettings(MainActivity.this, esp8266IpAddress, "time_on", hour, minute, colorTempSettings, colorTempBrightnessSettings);
-                dialog.dismiss();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

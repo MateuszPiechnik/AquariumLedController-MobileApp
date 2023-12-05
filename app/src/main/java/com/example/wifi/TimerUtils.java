@@ -1,5 +1,6 @@
 package com.example.wifi;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class TimerUtils {
         queue.add(request);
     }
 
+    @SuppressLint("SetTextI18n")
     public static void ResetTimerFunctionality(Button timeButton, Button resetButton){
         timeButton.setTextSize(15);
         timeButton.setText("Select Time");
