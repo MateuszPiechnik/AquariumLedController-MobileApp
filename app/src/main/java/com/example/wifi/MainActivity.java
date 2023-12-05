@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isTimeSelected = false;
-                resetTimerFunctionality();
+                TimerUtils.ResetTimerFunctionality(timeButton, resetButton);
             }
         });
 
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 isTimeSelectedOff = false;
-                resetTimerOffFunctionality();
+                TimerUtils.ResetTimerFunctionality(timeButtonOff, resetButtonOff);
             }
         });
 
@@ -398,50 +398,6 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(checkTime, 1000);
     }
 
-    private void sendTime(String command, int hour, int minute){
-        int time = hour * 100 + minute;
-        String url = "http://" + esp8266IpAddress + "/"+ command + "?value=" + time;
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("MojaAplikacja", "Odpowiedź od serwera: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Obsłuż błąd, jeśli wystąpi
-                Log.e("MojaAplikacja", "Błąd żądania HTTP: " + error.getMessage());
-            }
-        });
-
-        queue.add(request);
-    }
-
-    private void sendTimeSettings(String command, int hour, int minute, int CT, int brightness){
-        int time = hour * 100 + minute;
-        String url = "http://" + esp8266IpAddress + "/"+ command + "?value1=" + time +"&value2=" + CT + "&value3=" + brightness;
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("MojaAplikacja", "Odpowiedź od serwera: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Obsłuż błąd, jeśli wystąpi
-                Log.e("MojaAplikacja", "Błąd żądania HTTP: " + error.getMessage());
-            }
-        });
-
-        queue.add(request);
-    }
-
     private void showTimePickerDialog(){
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -469,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 timeButtonOff.setTextSize(22);
                 timeButtonOff.setText(String.format(Locale.getDefault(), "%02d:%02d", hourOff, minuteOff));
                 resetButtonOff.setVisibility(View.VISIBLE);
-                sendTime("time_off", hourOff, minuteOff);
+                TimerUtils.SendTime(MainActivity.this, esp8266IpAddress, "time_off", hourOff, minuteOff);
             }
         }, hourOff, minuteOff, true);
         timePickerDialog.setTitle("Select time");
@@ -488,11 +444,11 @@ public class MainActivity extends AppCompatActivity {
                 adjustSeekBarsForColorTemperature(colorTempSettings, colorTempBrightnessSettings);
                 warmWhiteLed.setImageResource(R.drawable.warmwhiteon);
                 coldWhiteLed.setImageResource(R.drawable.coldwhiteon);
-                resetTimerFunctionality();
+                TimerUtils.ResetTimerFunctionality(timeButton, resetButton);
             }
             if(isTimeSelectedOff && currentMinute == minuteOff && currentHour == hourOff){
                 isTimeSelectedOff = false;
-                resetTimerOffFunctionality();
+                TimerUtils.ResetTimerFunctionality(timeButtonOff, resetButtonOff);
                 changeLedStatusOn(false);
             }
             handler.postDelayed(this,1000);
@@ -518,17 +474,6 @@ public class MainActivity extends AppCompatActivity {
         daySimButton.setBackgroundColor(getColor(R.color.lb));
         daySimButton.setTextColor(Color.WHITE);
         NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "day_sim_off");
-    }
-    private void resetTimerFunctionality(){
-        timeButton.setTextSize(15);
-        timeButton.setText("Select Time");
-        resetButton.setVisibility(View.GONE);
-    }
-
-    private void resetTimerOffFunctionality(){
-        timeButtonOff.setTextSize(15);
-        timeButtonOff.setText("Select Time");
-        resetButtonOff.setVisibility(View.GONE);
     }
 
     private void changeLedStatusOn(boolean status){
@@ -677,9 +622,6 @@ public class MainActivity extends AppCompatActivity {
                         sunsetDate.add(Calendar.HOUR, 1);
                     }
 
-                    String formattedSunrise = outputFormat.format(sunriseDate.getTime());
-                    String formattedSunset = outputFormat.format(sunsetDate.getTime());
-
                     sunriseHour = sunriseDate.get(Calendar.HOUR_OF_DAY);
                     sunsetHour = sunsetDate.get(Calendar.HOUR_OF_DAY);
                     sunriseMinute = sunriseDate.get(Calendar.MINUTE);
@@ -688,8 +630,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("SunriseSunset", "Hour " + sunsetHour + " " + sunsetMinute);
                     Log.d("SunriseSunset", "Hour " + sunriseHour + " " + sunriseMinute);
 
-                    sendTime("sunrise_time", sunriseHour, sunriseMinute);
-                    sendTime("sunset_time", sunsetHour, sunsetMinute);
+                    TimerUtils.SendTime(MainActivity.this, esp8266IpAddress,"sunrise_time", sunriseHour, sunriseMinute);
+                    TimerUtils.SendTime(MainActivity.this, esp8266IpAddress, "sunset_time", sunsetHour, sunsetMinute);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -778,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sendTimeSettings("time_on", hour, minute, colorTempSettings, colorTempBrightnessSettings);
+                TimerUtils.SendTimeSettings(MainActivity.this, esp8266IpAddress, "time_on", hour, minute, colorTempSettings, colorTempBrightnessSettings);
                 dialog.dismiss();
             }
         });
