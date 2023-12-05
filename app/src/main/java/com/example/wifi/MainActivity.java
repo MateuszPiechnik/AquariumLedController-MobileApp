@@ -31,9 +31,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton coldWhiteLed, warmWhiteLed;
     boolean isTimeSelected = false;
     boolean isTimeSelectedOff = false;
-    Handler handler, handlerOff;
+    Handler handler;
     TextView CTtext, CTPerctext, text, textCold, textWarm;
     SeekBar CTsBar, CTPercsBar, sBar, sBarCold, sBarWarm;
     Button daySimButton;
@@ -121,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                     daySimButton.setBackgroundColor(Color.YELLOW);
                     daySimButton.setTextColor(Color.BLACK);
                     getSunriseSunsetTimes();
-                    Log.d("Tag", "Hour: " + sunsetHour + sunsetMinute);
                 }
                 else
                 {
@@ -135,18 +132,17 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 colorTempPerc = 10 + progress*10;
                 CTPerctext.setText("Brightness: "+ colorTempPerc + " %");
-                sendSliderValueCT("color_temperature", colorTemp,colorTempPerc);
+                NetworkUtils.SendSliderValueCT(MainActivity.this, esp8266IpAddress, "color_temperature", colorTemp,colorTempPerc);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 CTPerctext.setText("Brightness: "+ colorTempPerc + " %");
-                sendSliderValueCT("color_temperature", colorTemp,colorTempPerc);
+                NetworkUtils.SendSliderValueCT(MainActivity.this,esp8266IpAddress, "color_temperature", colorTemp,colorTempPerc);
                 adjustSeekBarsForColorTemperature(colorTemp, colorTempPerc);
             }
         });
@@ -163,18 +159,17 @@ public class MainActivity extends AppCompatActivity {
                     colorTemp = 2500 + 500*progress;
                 }
                 CTtext.setText("Color Temperature: " + colorTemp + "K");
-                sendSliderValueCT("color_temperature", colorTemp,colorTempPerc);
+                NetworkUtils.SendSliderValueCT(MainActivity.this, esp8266IpAddress, "color_temperature", colorTemp,colorTempPerc);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 CTtext.setText("Color Temperature: " + colorTemp + "K");
-                sendSliderValueCT("color_temperature", colorTemp,colorTempPerc);
+                NetworkUtils.SendSliderValueCT(MainActivity.this, esp8266IpAddress, "color_temperature", colorTemp,colorTempPerc);
                 adjustSeekBarsForColorTemperature(colorTemp, colorTempPerc);
             }
         });
@@ -193,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     warmWhiteLed.setImageResource(R.drawable.warmwhiteon);
                     coldWhiteLed.setImageResource(R.drawable.coldwhiteon);
                     adjustSeekBarsForColorTemperature(2700, colorTempPerc);
-                    sendSliderValue("color_temperature", 2700);
+                    NetworkUtils.SendSliderValue(MainActivity.this, esp8266IpAddress, "color_temperature", 2700);
                 }
                 else
                 {
@@ -246,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 sendValue = progress;
                 value = (int) ((progress / 255.0) * 100);
                 text.setText(value + " %");
-                sendSliderValue("set_value", sendValue);
+                NetworkUtils.SendSliderValue(MainActivity.this, esp8266IpAddress, "set_value", sendValue);
             }
 
             @Override
@@ -269,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 textCold.setText(value + " %");
                 sBarCold.setProgress(sendValue);
                 sBarWarm.setProgress(sendValue);
-                sendSliderValue("set_value", sendValue);
+                NetworkUtils.SendSliderValue(MainActivity.this, esp8266IpAddress, "set_value", sendValue);
             }
         });
 
@@ -301,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 textCold.setText(value + " %");
                 text.setText(0 + " %");
                 sBar.setProgress(0);
-                sendSliderValue("set_value_cold", sendValue);
+                NetworkUtils.SendSliderValue(MainActivity.this, esp8266IpAddress, "set_value_cold", sendValue);
                 isColdLedOn = true;
             }
         });
@@ -332,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                     warmWhiteLed.setImageResource(R.drawable.warmwhiteon);
                 }
                 textWarm.setText(value + " %");
-                sendSliderValue("set_value_warm", sendValue);
+                NetworkUtils.SendSliderValue(MainActivity.this, esp8266IpAddress, "set_value_warm", sendValue);
                 text.setText(0 + " %");
                 sBar.setProgress(0);
                 isWarmLedOn = true;
@@ -346,13 +341,13 @@ public class MainActivity extends AppCompatActivity {
                 if (!isColdLedOn) {
                     coldWhiteLed.setImageResource(R.drawable.coldwhiteon);
                     isColdLedOn = true;
-                    LedStatus("cold_led_on");
+                    NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "cold_led_on");
                     sBarCold.setProgress(255);
                     textCold.setText(100+" %");
                 } else {
                     coldWhiteLed.setImageResource((R.drawable.coldwhiteoff));
                     isColdLedOn = false;
-                    LedStatus("cold_led_off");
+                    NetworkUtils.LedStatus(MainActivity.this,esp8266IpAddress,"cold_led_off");
                     sBarCold.setProgress(0);
                     textCold.setText(0+" %");
                 }
@@ -366,13 +361,13 @@ public class MainActivity extends AppCompatActivity {
                 if (!isWarmLedOn) {
                     warmWhiteLed.setImageResource(R.drawable.warmwhiteon);
                     isWarmLedOn = true;
-                    LedStatus("warm_led_on");
+                    NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "warm_led_on");
                     sBarWarm.setProgress(255);
                     textWarm.setText(100+" %");
                 } else {
                     warmWhiteLed.setImageResource((R.drawable.warmwhiteoff));
                     isWarmLedOn = false;
-                    LedStatus("warm_led_off");
+                    NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "warm_led_off");
                     sBarWarm.setProgress(0);
                     textWarm.setText(0+" %");
                 }
@@ -401,67 +396,6 @@ public class MainActivity extends AppCompatActivity {
 
         handler = new Handler();
         handler.postDelayed(checkTime, 1000);
-    }
-
-    private void LedStatus(String command){
-        String url = "http://" + esp8266IpAddress + "/led_control";
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        Log.d("MojaAplikacja", "Wysyłam żądanie HTTP na adres: " + url);
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("MojaAplikacja", "Odpowiedź od serwera: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Obsłuż błąd, jeśli wystąpi
-                Log.e("MojaAplikacja", "Błąd żądania HTTP: " + error.getMessage());
-            }
-        });
-        queue.add(request);
-    }
-
-    private void sendSliderValue(String command, int value) {
-        String url = "http://" + esp8266IpAddress + "/"+ command + "?value=" + value; // Przekazanie wartości jako część URL
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("MojaAplikacja", "Odpowiedź od serwera: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Obsłuż błąd, jeśli wystąpi
-                Log.e("MojaAplikacja", "Błąd żądania HTTP: " + error.getMessage());
-            }
-        });
-
-        queue.add(request);
-    }
-    private void sendSliderValueCT(String command, int value, int percentage) {
-        String url = "http://" + esp8266IpAddress + "/"+ command + "?value1=" + value +"&value2=" + percentage; // Przekazanie wartości jako część URL
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("MojaAplikacja", "Odpowiedź od serwera: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Obsłuż błąd, jeśli wystąpi
-                Log.e("MojaAplikacja", "Błąd żądania HTTP: " + error.getMessage());
-            }
-        });
-
-        queue.add(request);
     }
 
     private void sendTime(String command, int hour, int minute){
@@ -583,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
         isDaySimOn = false;
         daySimButton.setBackgroundColor(getColor(R.color.lb));
         daySimButton.setTextColor(Color.WHITE);
-        LedStatus("day_sim_off");
+        NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "day_sim_off");
     }
     private void resetTimerFunctionality(){
         timeButton.setTextSize(15);
@@ -599,9 +533,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeLedStatusOn(boolean status){
         if(status){
-            LedStatus("led_on");
-            LedStatus("warm_led_on");
-            LedStatus("cold_led_on");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "led_on");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "warm_led_on");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "cold_led_on");
             coldWhiteLed.setImageResource(R.drawable.coldwhiteon);
             warmWhiteLed.setImageResource(R.drawable.warmwhiteon);
             sBar.setProgress(255);
@@ -612,9 +546,9 @@ public class MainActivity extends AppCompatActivity {
             text.setText(100 + " %");
         }
         else{
-            LedStatus("led_off");
-            LedStatus("warm_led_off");
-            LedStatus("cold_led_off");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "led_off");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "warm_led_off");
+            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "cold_led_off");
             coldWhiteLed.setImageResource(R.drawable.coldwhiteoff);
             warmWhiteLed.setImageResource(R.drawable.warmwhiteoff);
             sBar.setProgress(0);
@@ -704,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void getSunriseSunsetTimes() {
-        // Współrzędne geograficzne Krakowa
+        // Krakow latitude/longitude
         double latitude = 50.061947;
         double longitude = 19.936855;
 
@@ -714,7 +648,6 @@ public class MainActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        // Data (możesz dostosować do swoich potrzeb)
         String date = dateFormat.format(calendar.getTime());
 
         String url = "https://api.sunrise-sunset.org/json?lat=" + latitude + "&lng=" + longitude + "&date=" + date;
@@ -747,10 +680,6 @@ public class MainActivity extends AppCompatActivity {
                     String formattedSunrise = outputFormat.format(sunriseDate.getTime());
                     String formattedSunset = outputFormat.format(sunsetDate.getTime());
 
-                    // Wyświetl czasy wschodu i zachodu słońca
-                    Log.d("SunriseSunset", date + " Czas wschodu: " + formattedSunrise);
-                    Log.d("SunriseSunset", date + " Czas zachodu: " + formattedSunset);
-
                     sunriseHour = sunriseDate.get(Calendar.HOUR_OF_DAY);
                     sunsetHour = sunsetDate.get(Calendar.HOUR_OF_DAY);
                     sunriseMinute = sunriseDate.get(Calendar.MINUTE);
@@ -765,7 +694,7 @@ public class MainActivity extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            LedStatus("day_sim_on");
+                            NetworkUtils.LedStatus(MainActivity.this, esp8266IpAddress, "day_sim_on");
                         }
                     }, 500); // Opóźnienie na 1 sekundę (1000 milisekund)
 
@@ -864,5 +793,4 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 }
