@@ -36,7 +36,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
-    private final String esp8266IpAddress = "192.168.1.46"; // Adress IP ESP8266
+    private final String esp8266IpAddress = "192.168.1.10"; // Adress IP ESP8266
     //private final String esp8266IpAddress = "192.168.1.69";
     boolean isColdLedOn, isWarmLedOn, isColorTempOn, isDaySimOn;
     int minute, hour, minuteOff, hourOff;
